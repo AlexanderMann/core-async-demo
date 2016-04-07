@@ -17,17 +17,15 @@
   "sleepy-print is slow so to run it faster parallelize-print runs it on multiple cores,
   thus distributing the workload."
   [input]
-  (loop [words (s/split input #" ")]
-    (async/thread
-      (-> words
-          first
-          (str " ")
-          sleepy-print))
-    (when (second words)
-      (recur (rest words)))))
+  (let [words (s/split input #" ")
+        threads (for [word words]
+                  (async/thread (sleepy-print (str word " "))))]
+    (async/<!! (async/into [] (async/merge threads)))))
 
 (defn -main [& _]
-  (let [input "Asynchronous programming is hard, but should it be?"]
-    (time
-      (parallelize-print input))
-    (println "All done!")))
+  (time
+    (let [input "Asynchronous programming is hard, but should it be?"
+          print-threads (parallelize-print input)]
+      (println)
+      (println print-threads)
+      (println "All done!"))))
