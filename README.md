@@ -1,2 +1,14 @@
 # core-async-demo
-This is a simple demo of asynchronous programming written for the purpose of a blog post.
+
+A Clojure library designed to ... well, that part is up to you.
+
+## Usage
+
+FIXME
+
+## License
+
+Copyright © 2016 FIXME
+
+Distributed under the Eclipse Public License either version 1.0 or (at
+your option) any later version.
