@@ -14,6 +14,7 @@
 (defn -main [& _]
   (let [input "Asynchronous programming is hard, but should it be?"
         word-seq (s/split input #" ")]
-    (doseq [word word-seq]
-      (sleepy-print (str word " ")))
+    (time
+      (doseq [word word-seq]
+        (sleepy-print (str word " "))))
     (println "All done!")))
