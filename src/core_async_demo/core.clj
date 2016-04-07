@@ -1,5 +1,6 @@
 (ns core-async-demo.core
-  (:require [clojure.string :as s])
+  (:require [clojure.core.async :as async]
+            [clojure.string :as s])
   (:gen-class))
 
 (defn sleepy-print
@@ -9,12 +10,24 @@
   [word]
   (Thread/sleep 1000)
   (print word)
-  (flush))
+  (flush)
+  (.getName (Thread/currentThread)))
+
+(defn parallelize-print
+  "sleepy-print is slow so to run it faster parallelize-print runs it on multiple cores,
+  thus distributing the workload."
+  [input]
+  (loop [words (s/split input #" ")]
+    (async/thread
+      (-> words
+          first
+          (str " ")
+          sleepy-print))
+    (when (second words)
+      (recur (rest words)))))
 
 (defn -main [& _]
-  (let [input "Asynchronous programming is hard, but should it be?"
-        word-seq (s/split input #" ")]
+  (let [input "Asynchronous programming is hard, but should it be?"]
     (time
-      (doseq [word word-seq]
-        (sleepy-print (str word " "))))
+      (parallelize-print input))
     (println "All done!")))
