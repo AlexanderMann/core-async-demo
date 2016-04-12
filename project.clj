@@ -7,4 +7,5 @@
   :test-paths ["test"]
   :jvm-opts ["-Duser.timezone=GMT"]
   :main core-async-demo.core
-  :dependencies [[org.clojure/clojure "1.8.0"]])
+  :dependencies [[org.clojure/clojure "1.8.0"]
+                 [org.clojure/core.async "0.2.374"]])
