@@ -5,7 +5,7 @@
   (:gen-class))
 
 (defn sleepy-transform
-  "Waits then updates printer."
+  "Waits then returns a transformed word"
   [word]
   (Thread/sleep 1000)
   (s/upper-case word))
@@ -20,8 +20,7 @@
        :v (sleepy-transform word)})))
 
 (defn coordinate-parallel
-  "Coordinate the created threads so that we don't exit before daemon
-  threads have completed."
+  "Coordinate the created threads"
   [input-seq]
   (let [crdt-output (crdt/create-crdt-output (count input-seq))
         thread (map-indexed (partial parallel-transform crdt-output) input-seq)]

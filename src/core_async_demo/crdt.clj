@@ -26,6 +26,6 @@
     (get-details this)))
 
 (defn create-crdt-output
-  "This is the public mechanism for creating a Print defrecord"
+  "This is the public mechanism for creating a CommutativeOutput defrecord"
   [n]
   (->CommutativeOutput (atom (vec (repeat n nil)))))
