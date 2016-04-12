@@ -10,20 +10,26 @@
   (s/upper-case word))
 
 (defn parallel-transform
-  "An asyc wrapper for the sleepy-transform."
-  [result word]
+  "An async wrapper for the sleepy-transform."
+  [word]
   (async/thread
-    (swap! result conj (sleepy-transform word))))
+    (sleepy-transform word)))
+
+(defn coordinate-parallel
+  "Coordinate the created threads so that we don't exit before daemon
+  threads have completed."
+  [input-seq]
+  (let [threads (map parallel-transform input-seq)
+        merged (async/merge threads)]
+    (async/<!! (async/into [] merged))))
 
 (defn main
   []
   (time
     (let [input "Asynchronous programming is hard, but should it be?"
-          result (atom [])]
-      (doseq [word (s/split input #" ")]
-        (parallel-transform result word))
+          result (coordinate-parallel (s/split input #" "))]
       (println)
-      (println @result)
+      (println result)
       (println "All done!"))))
 
 (defn -main [& _]
